@@ -1,0 +1,148 @@
+/*
+Generic Styling, for Desktops/Laptops
+*/
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Zebra striping */
+tr:nth-of-type(odd) {
+    background: #eee;
+}
+th {
+    background: #333;
+    color: white;
+    font-weight: bold;
+}
+td, th {
+  padding: 6px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+/*
+	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+	*/
+	@media
+	  only screen
+    and (max-width: 760px), (min-device-width: 768px)
+    and (max-device-width: 1024px)  {
+
+		/* Force table to not be like tables anymore */
+		.filter-table table, .filter-table thead, .filter-table tbody, .filter-table th, .filter-table td, .filter-table tr {
+			display: block;
+		}
+
+		/* Hide table headers (but not display: none;, for accessibility) */
+		.filter-table thead tr {
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+
+    .filter-table tr {
+      margin: 0 0 1rem 0;
+    }
+
+    .filter-table tr:nth-child(odd) {
+      background: #ccc;
+    }
+
+		.filter-table td {
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee;
+			position: relative;
+			/*padding-left: 50%;*/
+            text-align: center;
+		}
+
+		.filter-table td:before {
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			/*top: 0;*/
+			left: 2px;
+			width: 45%;
+			padding-right: 100px;
+			white-space: nowrap;
+		}
+
+		/*
+		Label the data
+    You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+		*/
+		.filter-table td:nth-of-type(1):before { content: ""; }
+		.filter-table td:nth-of-type(2):before { content: ""; }
+		.filter-table td:nth-of-type(3):before { content: ""; }
+		.filter-table td:nth-of-type(4):before { content: ""; }
+		.filter-table td:nth-of-type(5):before { content: ""; }
+		.filter-table td:nth-of-type(6):before { content: ""; }
+		.filter-table td:nth-of-type(7):before { content: ""; }
+		.filter-table td:nth-of-type(8):before { content: ""; }
+	}
+
+
+
+/*
+	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+	*/
+	@media
+	  only screen
+    and (max-width: 760px), (min-device-width: 768px)
+    and (max-device-width: 1024px)  {
+
+		/* Force table to not be like tables anymore */
+		.file-table table, .file-table thead, .file-table tbody, .file-table th, .file-table td, .file-table tr {
+			display: block;
+		}
+
+		/* Hide table headers (but not display: none;, for accessibility) */
+		.file-table thead tr {
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+
+    .file-table tr {
+      margin: 0 0 1rem 0;
+    }
+
+    .file-table tr:nth-child(odd) {
+      background: #ccc;
+    }
+
+		.file-table td {
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee;
+			position: relative;
+			/*padding-left: 50%;*/
+            text-align: center;
+		}
+
+		.file-table td:before {
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			/*top: 0;*/
+			left: 2px;
+			width: 45%;
+			padding-right: 100px;
+			white-space: nowrap;
+		}
+
+		/*
+		Label the data
+    You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+		*/
+		.file-table td:nth-of-type(1):before { content: "模具"; }
+		.file-table td:nth-of-type(2):before { content: "日期"; }
+		.file-table td:nth-of-type(3):before { content: "类别"; }
+		.file-table td:nth-of-type(4):before { content: "机器"; }
+		.file-table td:nth-of-type(5):before { content: "材料"; }
+		.file-table td:nth-of-type(6):before { content: "文件名"; }
+		.file-table td:nth-of-type(7):before { content: "下载"; }
+		.file-table td:nth-of-type(8):before { content: "用户"; }
+	}

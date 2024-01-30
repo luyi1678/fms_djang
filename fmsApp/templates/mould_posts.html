@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block pageContent %}
+<h1>{{ mould.name }} Posts</h1>
+
+{#  <form method="GET" action="{% url 'mould-posts' mould.id %}">#}
+{#    <label for="date-filter">Filter by Date:</label>#}
+{#    <input type="date" id="date-filter" name="date_filter" value="{{ date_filter }}">#}
+{##}
+{#    <label for="category-filter">Filter by Category:</label>#}
+{#    <select id="category-filter" name="category_filter">#}
+{#      <option value="">All</option>#}
+{#      {% for category in categories %}#}
+{#        <option value="{{ category.id }}" {% if category.id == category_filter %}selected{% endif %}>{{ category.name }}</option>#}
+{#      {% endfor %}#}
+{#    </select>#}
+{##}
+{#    <button type="submit">Apply Filter</button>#}
+{#  </form>#}
+    <div class="row">
+        <div class="card-body">
+            <form method="get" class="form-inline">
+                {% csrf_token %}
+                {% for hidden in myFilter.form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                <table class="filter-table" id="filter-table">
+                    <tr>
+                        {% for field in myFilter.form.visible_fields %}
+                            <td class="text-start">
+                                <div class="form-group{% if field.errors %} has-error{% endif %}">
+                                    {{ field }}
+                                    {% for error in field.errors %}
+                                        <span class="help-block">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                        {% endfor %}
+                            <td class="text-center"><button class="btn btn-sm" type="submit">Search</button></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+  <hr>
+
+  <div id="preview-container">
+    <div id="preview-image" class="preview-item">
+      <img id="preview-img" src="" alt="" style="max-width: 100%; height: auto;">
+      <div class="preview-nav">
+        <button id="prev-img" class="nav-btn">◀</button>
+        <button id="next-img" class="nav-btn">▶</button>
+      </div>
+    </div>
+    <div id="preview-pdf" class="preview-item">
+      <iframe id="preview-pdf-iframe" src="" width="100%" height="600px"></iframe>
+      <div class="preview-nav">
+        <button id="prev-pdf" class="nav-btn">◀</button>
+        <button id="next-pdf" class="nav-btn">▶</button>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div id="post-list">
+    {% for post in posts %}
+      <div class="post-item">
+        <a href="#" class="post-link" data-image="{{ post.image_path }}" data-pdf="{{ post.pdf_path }}" data-post-id="{{ post.id }}">
+          <h2>{{ post.title }}</h2>
+        </a>
+        <p>{{ post.date }}</p>
+        <p>{{ post.category.name }}</p>
+      </div>
+    {% empty %}
+      <p>No posts found.</p>
+    {% endfor %}
+  </div>
+
+{% endblock pageContent %}
+
+{% block ScriptBlock %}
+<script>
+    var imagePaths = {{ image_paths|safe }};
+    var pdfPaths = {{ pdf_paths|safe }};
+
+    var currentImageIndex = 0;
+    var currentPdfIndex = 0;
+
+    function showNextImage() {
+        currentImageIndex = (currentImageIndex + 1) % imagePaths.length;
+        document.getElementById('preview-image').src = imagePaths[currentImageIndex];
+    }
+
+    function showPreviousImage() {
+        currentImageIndex = (currentImageIndex - 1 + imagePaths.length) % imagePaths.length;
+        document.getElementById('preview-image').src = imagePaths[currentImageIndex];
+    }
+
+    function showNextPdf() {
+        currentPdfIndex = (currentPdfIndex + 1) % pdfPaths.length;
+        document.getElementById('preview-pdf').src = pdfPaths[currentPdfIndex];
+    }
+
+    function showPreviousPdf() {
+        currentPdfIndex = (currentPdfIndex - 1 + pdfPaths.length) % pdfPaths.length;
+        document.getElementById('preview-pdf').src = pdfPaths[currentPdfIndex];
+    }
+</script>
+{% endblock ScriptBlock %}

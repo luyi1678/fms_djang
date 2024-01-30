@@ -1,0 +1,82 @@
+{% extends 'base.html' %}{% load static %}{% block pageContent %}
+<style>
+    main {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: auto;
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        <div class="card card-default rounded-0 shadow">
+            <div class="card-header">
+                <h4 class="card-title"><b>注册新用户</b></h4>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <form id="register-user" method="POST" action="{% url 'register-user' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mdc-layout-grid">
+                            <div class="mdc-layout-grid__inner">
+                                <div class="form-group row mb-3">
+{#                                    <label for="first_name" class="col-sm-3 col-form-label">名字</label>#}
+                                    <div class="col-sm-12">
+                                        <input type="text" placeholder="名字" class="form-control rounded-0" name="first_name" id="first_name" value="{{ reg_form.data.first_name }}" required="required">
+                                    </div>
+
+                                </div>
+                                 <div class="form-group row mb-3">
+{#                                    <label for="last_name" class="col-sm-3 col-form-label">姓氏</label>#}
+                                    <div class="col-sm-12">
+                                       <input type="text" placeholder="姓氏" class="form-control rounded-0" name="last_name" id="last_name" value="{{ reg_form.data.last_name }}" required="required">
+                                    </div>
+                                </div>
+                                 <div class="form-group row mb-3">
+{#                                    <label for="email" class="col-sm-3 col-form-label">Email</label>#}
+                                    <div class="col-sm-12">
+                                       <input type="email" placeholder="Email" class="form-control rounded-0" name="email" id="email" value="{{ reg_form.data.email }}" required="required">
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+{#                                    <label for="username" class="col-sm-3 col-form-label">用户名</label>#}
+                                    <div class="col-sm-12">
+                                       <input type="text" placeholder="用户名" class="form-control rounded-0" name="username" id="username" value="{{ reg_form.data.username }}" required="required">
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+{#                                    <label for="password1" class="col-sm-3 col-form-label">密码</label>#}
+                                    <div class="col-sm-12">
+                                       <input type="password" placeholder="密码" class="form-control rounded-0" name="password1" id="password1" value="{{ reg_form.data.password1 }}" required="required">
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+{#                                    <label for="password2" class="col-sm-3 col-form-label">确认密码</label>#}
+                                    <div class="col-sm-12">
+                                       <input type="password" placeholder="确认密码" class="form-control rounded-0" name="password2" id="password2" value="{{ reg_form.data.password2 }}" required="required">
+                                    </div>
+                                </div>
+
+                                {% for field in reg_form %} {% for error in field.errors %}
+                                <div class="alert alert-danger my-2">
+                                    <p>{{ error }}</p>
+                                </div>
+                                {% endfor %} {% endfor %}
+                                <div class="form-group mb-3">
+                                    <div class="d-flex w-100 justify-content-end">
+                                        <button class="btn btn-sm rounded-0 btn-primary col-4">
+                                                登录
+                                            </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock pageContent %}

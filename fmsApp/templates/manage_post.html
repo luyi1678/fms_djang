@@ -1,0 +1,334 @@
+{% load customfilter %}
+
+<style>
+    #catNew,
+    #catSelect,
+    #mouldNew,
+    #mouldSelect,
+    #matNew,
+    #matSelect,
+    #machNew,
+    #machSelect{
+        display: none;
+    }
+    label[for="catOptions"],
+    label[for="mouldOptions"],
+    label[for="matOptions"],
+    label[for="machOptions"]{
+          display: block;
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+
+
+</style>
+
+<div class="container-fluid">
+    <form action=" " id="post-form">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ post.id }}">
+        <input type="hidden" name="user" value="{% if not post %}{{ user.id }}{% else %}{{ post.user.id }}{% endif %}">
+        <div class="form-group mb-3 ">
+            <label for="title" class="control-label">标题</label>
+            <input type="text" class="form-control rounded-0" id="title" name="title" value="{{ post.title }}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="description" class="control-label">描述</label>
+            <textarea class="form-control rounded-0" name="description" id="description" rows="5">{{ post.description }}</textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="date">试模日期</label>
+            {% if post.date %}
+                {% with post_date=post.date|date:'YYYY-MM-dd' %}
+                    <input type="date" name="date" value="{{ post_date }}" class="form-control">
+                {% endwith %}
+            {% else %}
+                <input type="date" name="date" class="form-control">
+            {% endif %}
+        </div>
+
+        <label for="catOptions" >创建类别:</label>
+        <div id="catOptions">
+          <div class="form-check form-check-inline" >
+            <label class="form-check-label" for="catRadio1">从现有类别中选择</label>
+            <input class="form-check-input" type="radio" name="catOptions" id="catRadio1" value="select">
+          </div>
+          <div class="form-check form-check-inline" >
+            <label class="form-check-label" for="catRadio2">新建类别</label>
+            <input class="form-check-input" type="radio" name="catOptions" id="catRadio2" value="new">
+          </div>
+            <div class="form-check form-check-inline" >
+                <label class="form-check-label" for="catRadio3">不创建类别</label>
+                <input class="form-check-input" type="radio" name="catOptions" id="catRadio3" value="no">
+          </div>
+        </div>
+
+        <div class="form-group mb-3" id="catSelect">
+            <label>选择类别</label>
+            <select name="category" class="form-control">
+                <option value="">Select a category...</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if post.category == category %}selected{% endif %}>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group mb-3" id="catNew">
+            <label>新建类别</label>
+            <input name="category_new" type="text" placeholder="新建一个类别"
+                class="form-control">
+        </div>
+
+
+        <label for="mouldOptions" >创建模具:</label>
+        <div id="mouldOptions">
+          <div class="form-check form-check-inline" >
+            <label class="form-check-label" for="mouldRadio1">从现有模具中选择</label>
+            <input class="form-check-input" type="radio" name="mouldOptions" id="mouldRadio1" value="select">
+          </div>
+          <div class="form-check form-check-inline" >
+            <label class="form-check-label" for="catRadio2">新建模具</label>
+            <input class="form-check-input" type="radio" name="mouldOptions" id="mouldRadio2" value="new">
+          </div>
+            <div class="form-check form-check-inline" >
+                <label class="form-check-label" for="catRadio3">不创建模具</label>
+                <input class="form-check-input" type="radio" name="mouldOptions" id="mouldRadio3" value="no">
+          </div>
+        </div>
+
+
+        <div class="form-group mb-3" id="mouldSelect">
+            <label>选择模具</label>
+            <select name="mould" class="form-control">
+                <option value="">Select a mould...</option>
+                {% for mould in moulds %}
+                    <option value="{{ mould.id }}" {% if post.mould == mould %}selected{% endif %}>{{ mould.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group mb-3" id="mouldNew">
+            <label>新建模具</label>
+            <input name="mould_new" type="text" placeholder="新建一个模具"
+                class="form-control">
+        </div>
+
+        <label for="matOptions" >创建材料:</label>
+        <div id="matOptions">
+          <div class="form-check form-check-inline" >
+            <label class="form-check-label" for="matRadio1">从现有材料中选择</label>
+            <input class="form-check-input" type="radio" name="matOptions" id="matRadio1" value="select">
+          </div>
+          <div class="form-check form-check-inline" >
+            <label class="form-check-label" for="matRadio2">新建材料</label>
+            <input class="form-check-input" type="radio" name="matOptions" id="matRadio2" value="new">
+          </div>
+            <div class="form-check form-check-inline" >
+                <label class="form-check-label" for="matRadio3">不创建材料</label>
+                <input class="form-check-input" type="radio" name="matOptions" id="matRadio3" value="no">
+          </div>
+        </div>
+
+
+        <div class="form-group mb-3" id="matSelect">
+            <label>选择材料</label>
+            <select name="material" class="form-control">
+                <option value="">Select a material...</option>
+                {% for material in materials %}
+                    <option value="{{ material.id }}" {% if post.material == material %}selected{% endif %}>{{ material.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group mb-3" id="matNew">
+            <label>新建材料</label>
+            <input name="material_new_name" type="text" placeholder="材料树脂缩写"
+                class="form-control">
+            <input name="material_new_grade" type="text" placeholder="牌号"
+                class="form-control">
+            <input name="material_new_manu" type="text" placeholder="厂商"
+                class="form-control">
+            <input name="material_new_lot" type="text" placeholder="lot number 非必填"
+                class="form-control">
+        </div>
+
+
+        <label for="machOptions" >创建机器:</label>
+        <div id="machOptions">
+          <div class="form-check form-check-inline" >
+            <label class="form-check-label" for="machRadio1">从现有机器中选择</label>
+            <input class="form-check-input" type="radio" name="machOptions" id="machRadio1" value="select">
+          </div>
+          <div class="form-check form-check-inline" >
+            <label class="form-check-label" for="machRadio2">新建机器</label>
+            <input class="form-check-input" type="radio" name="machOptions" id="machRadio2" value="new">
+          </div>
+            <div class="form-check form-check-inline" >
+                <label class="form-check-label" for="machRadio3">不创建机器</label>
+                <input class="form-check-input" type="radio" name="machOptions" id="machRadio3" value="no">
+          </div>
+        </div>
+
+
+        <div class="form-group mb-3" id="machSelect">
+            <label>选择机器</label>
+            <select name="machine" class="form-control">
+                <option value="">Select a machine...</option>
+                {% for machine in machines %}
+                <option value="{{ machine.id }}" {% if post.machine == machine %}selected{% endif %}>{{ machine.location }} {{ machine.seri_numer }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group mb-3" id="machNew">
+            <label>新建机器</label>
+            <input name="mac_new_loc" type="text" placeholder="location"
+                class="form-control">
+            <input name="mac_new_sn" type="text" placeholder="seri_number"
+                class="form-control">
+        </div>
+
+
+        <div class="form-group mb-3 ">
+            <label for="file_path" class="control-label">File</label>
+            <input type="file" class="form-control rounded-0" id="file_path" name="file_path" value="" accept='image/*, video/*, audio/*, application/pdf, text/csv, text/plain, application/zip, .docs,.doc, application/ppt, .ppt' {% if not post %} required {% endif %}>
+            <small class="text-muted"><i>Accept Only: image/*, video/*, audio/*, application/pdf, text/csv, text/plain, application/zip, .docs,.doc, application/ppt, .ppt</i></small>
+            <input type="file" multiple class="form-control rounded-0" id="file_paths" name="file_paths" value="" accept="*/*" {% if not post %} required {% endif %}>
+            <small class="text-muted"><i>Accept Any File Type</i></small>
+            {% if post.file_path %}
+            <div><small><span class="text-muted">Current File:</span> <a href="{{ post.file_path.url }}" target="_blank">{{ post.file_path|replaceBlank:"uploads/" }}</a></small> </div>
+            {% endif %}
+        </div>
+
+        <div class="form-check form-check-inline">
+            <label class="form-check-label" for="saveRadio1">本地存储</label>
+            <input class="form-check-input" type="radio" name="saveOptions" id="saveRadio1" value="Local">
+        </div>
+        <div class="form-check form-check-inline">
+            <label class="form-check-label" for="saveRadio2">上传服务器</label>
+            <input class="form-check-input" type="radio" name="saveOptions" id="saveRadio2" value="Lan">
+        </div>
+        <div id="savePathInput" style="display: none;">
+          <label for="savePath">保存路径:</label>
+          <input type="text" id="savePath" name="savePath" placeholder="共享盘下个人文件夹名称">
+        </div>
+
+    </form>{{ form.media }}
+</div>
+<script>
+    $(function() {
+         // Add a change event listener to the radio buttons
+        $('input[name="saveOptions"]').change(function() {
+            // Get the value of the selected radio button
+            var saveOption = $('input[name="saveOptions"]:checked').val();
+            // If "上传服务器" radio button is selected, show the input box
+            if (saveOption === "Lan") {
+                $('#savePathInput').show();
+            } else {
+                $('#savePathInput').hide();
+            }
+        });
+         // Add a change event listener to the radio buttons
+        $('input[name="catOptions"]').change(function() {
+            var catOption = $('input[name="catOptions"]:checked').val();
+            if (catOption === "select") {
+                $('#catSelect').show();
+                $('#catNew').hide();
+            } else if (catOption === "new"){
+                $('#catSelect').hide();
+                $('#catNew').show();
+            } else {
+                $('#catSelect').hide();
+                $('#catNew').hide();
+            }
+        });
+         // Add a change event listener to the radio buttons
+        $('input[name="mouldOptions"]').change(function() {
+            var mouldOption = $('input[name="mouldOptions"]:checked').val();
+            if (mouldOption === "select") {
+                $('#mouldSelect').show();
+                $('#mouldNew').hide();
+            } else if (mouldOption === "new"){
+                $('#mouldSelect').hide();
+                $('#mouldNew').show();
+            } else{
+                $('#mouldSelect').hide();
+                $('#mouldNew').hide();
+            }
+        });
+
+        $('input[name="matOptions"]').change(function() {
+            var matOption = $('input[name="matOptions"]:checked').val();
+            if (matOption === "select") {
+                $('#matSelect').show();
+                $('#matNew').hide();
+            } else if (matOption === "new"){
+                $('#matSelect').hide();
+                $('#matNew').show();
+            } else{
+                $('#matSelect').hide();
+                $('#matNew').hide();
+            }
+        });
+        $('input[name="machOptions"]').change(function() {
+            var machOption = $('input[name="machOptions"]:checked').val();
+            if (machOption === "select") {
+                $('#machSelect').show();
+                $('#machNew').hide();
+            } else if (machOption === "new"){
+                $('#machSelect').hide();
+                $('#machNew').show();
+            } else{
+                $('#machSelect').hide();
+                $('#machNew').hide();
+            }
+        });
+
+        $('#post-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this)
+            $('.err-msg').remove();
+            var el = $('<div>')
+            el.addClass("alert alert-danger err-msg")
+            el.hide()
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+
+            start_loader();
+            $.ajax({
+                url: "{% url 'save-post' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err)
+                    alert("An error occured ", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg ")
+                        location.reload()
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.html(resp.msg)
+                    } else {
+                        el.text("An error occured ", 'error');
+                        end_loader();
+                        console.error(resp)
+                    }
+                    _this.prepend(el)
+                    el.show('slow')
+                    $("html, body, .modal ").scrollTop(0);
+                    end_loader()
+                }
+            })
+        })
+    })
+</script>

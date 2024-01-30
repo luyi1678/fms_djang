@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load customfilter %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'assets/default/css/home.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+{% endblock %}
+
+
+{% block pageContent %}
+<section class="">
+    <div id="directory-tree"></div>
+
+
+</section>
+
+
+{% endblock pageContent %}
+
+{% block ScriptBlock %}
+<script>
+    $(function() {
+        // Fetch the directory structure from the Django endpoint
+        $.ajax({
+            method: 'GET',
+            url: '/directory-tree/',  // Your Django endpoint
+            success: function(data) {
+                // Render the directory tree using jsTree
+                $('#directory-tree').jstree({
+                    'core': {
+                        'data': data
+                    },
+                    "plugins" : [ "contextmenu" ],
+                    "contextmenu":{
+                        "items": function(node) {
+                            var tree = $("#directory-tree").jstree(true);
+                            return {
+                                "Create": {
+                                    "separator_before": false,
+                                    "separator_after": false,
+                                    "label": "Create Folder",
+                                    "action": function (obj) {
+                                        var createFolderName = prompt("Folder name:");
+                                        if(createFolderName) {
+                                            // Send the create request to Django
+                                            $.ajax({
+                                                method: 'POST',
+                                                url: '/create-directory/',  // Another Django endpoint you'll create
+                                                data: {
+                                                    'dir_path': node.id,  // Pass the parent directory's ID
+                                                    'new_folder_name': createFolderName
+                                                },
+                                                success: function(data) {
+                                                    // Refresh the tree view to show the new folder
+                                                    tree.refresh();
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            };
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+
+</script>
+
+{% endblock ScriptBlock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block pageContent %}
+<div>
+    <form action="{% url 'upload-img' %} "  method="post" id="upload-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group mb-3" id="mouldNew">
+            <label>新建模具</label>
+            <input name="mould_new" type="text" placeholder="新建一个模具"
+                class="form-control" required>
+        </div>
+         <div class="form-group mb-3">
+            <label for="date">试模日期</label>
+             <input type="date" name="date" class="form-control" required>
+        </div>
+        <div class="form-group mb-3 ">
+            <label for="file_path" class="control-label">Files</label>
+            <input type="file" multiple class="form-control rounded-0" id="files" name="files" value="" accept="*/*" required>
+            <small class="text-muted"><i>Accept Any File Type</i></small>
+        </div>
+         <div id="savePathInput">
+              <label for="savePath">保存路径:</label>
+              <input type="text" id="savePath" name="savePath" placeholder="共享盘下个人文件夹名称" required>
+        </div>
+        <button class="btn btn-sm" type="submit">Save</button>
+    </form>
+</div>
+{% endblock pageContent %}

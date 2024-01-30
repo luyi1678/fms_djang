@@ -1,0 +1,32 @@
+{% extends "base.html" %} {% load humanize %} {% load customfilter %}
+
+
+
+{% block pageContent %}
+
+{#    <a href="{% url 'posts-page' %}" class="btn btn-dark my-3">Go Back</a>#}
+    <h1>{{ post.title }}</h1>
+    <div>
+    {% if preview_content %}
+        {% if preview_type == 'image' %}
+            <img src="{{ preview_content }}" alt="{{ file_name }}" style="max-width: 100%; height: auto">
+        {% elif preview_type == 'pdf' %}
+            <iframe src="{{ preview_content }}" width="100%" height="600px" ></iframe>
+{#            <embed src="{{ preview_content }}" type="application/pdf" width="100%" height="600px" />#}
+{#            <object type="application/pdf" data="{{ preview_content }}" width="100%" height="620px"> ></object>#}
+        {% elif preview_type == 'ppt' %}
+{#            <iframe src="{{ preview_content }}" width="100%" height="600px" ></iframe>#}
+            <iframe src="{{ preview_content }}" type="application/vnd.ms-powerpoint" width="800" height="600" allowfullscreen="true" frameborder="0"></iframe>
+        {% elif preview_type == 'excel' %}
+            <iframe src="{{ preview_content }}" width="100%" height="600px" ></iframe>
+        {% elif preview_type == 'text' %}
+            <pre>{{ preview_content }}</pre>
+        {% else %}
+            <p>{{ file_name }}</p >
+        {% endif %}
+    {% else %}
+        <p>Sorry, preview is not available for this file,Please download the file.</p >
+    {% endif %}
+    <p>{{ post.description }}</p>
+    </div>
+{% endblock pageContent %}

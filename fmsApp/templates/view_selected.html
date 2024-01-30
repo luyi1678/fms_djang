@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'assets/default/css/view_selected.css' %}">
+{% endblock %}
+
+{% block pageContent %}
+    <div class="row">
+        <div class="card-body">
+            <form method="get" class="form-inline">
+                {% csrf_token %}
+                {% for hidden in myFilter.form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                <table class="filter-table" id="filter-table">
+                    <tr>
+                        {% for field in myFilter.form.visible_fields %}
+                            <td class="text-start">
+                                <div class="form-group{% if field.errors %} has-error{% endif %}">
+                                    {{ field|add_class:"form-control"|attr:"style:width:50%;" }}
+                                    {% for error in field.errors %}
+                                        <span class="help-block">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                        {% endfor %}
+                            <td class="text-center"><button class="btn btn-sm" type="submit">Search</button></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+  <hr>
+
+  <div id="post-list">
+      {% if posts %}
+        <div>
+            {% for post in posts %}
+
+            <div class="content-container" style="text-align: center">
+                <h2>{{ post.title }}</h2>
+            {% if post.preview_content %}
+                {% if post.preview_type == 'image' %}
+                    <img src="{{ post.preview_content }}" alt="{{ file_name }}" style="max-width: 80%; height: auto">
+                {% elif post.preview_type == 'pdf' %}
+                    <iframe src="{{ post.preview_content }}" width="100%" height="600px" ></iframe>
+                {% elif post.preview_type == 'ppt' %}
+                    <iframe src="{{ post.preview_content }}" type="application/vnd.ms-powerpoint" width="800" height="600" allowfullscreen="true" frameborder="0"></iframe>
+                {% elif post.preview_type == 'excel' %}
+                    <iframe src="{{ post.preview_content }}" width="100%" height="600px" ></iframe>
+                {% elif post.preview_type == 'text' %}
+                    <pre>{{ post.preview_content }}</pre>
+                {% else %}
+                    <p>{{ post.file_name }}</p >
+                {% endif %}
+            {% else %}
+                <p>Sorry, preview is not available for this file,Please download the file.</p >
+            {% endif %}
+            <p>{{ post.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+ <!--Pagination-->
+    {% load my_tags %}
+
+    <nav aria-label="Page navigation example" class="navbar
+    fixed-bottom justify-content-around py-0" >
+        <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <a class="page-link" href="?{% param_replace page=1 %}">First</a>
+        </li>
+        {% if posts.has_previous %}
+            <li class="page-item">
+            <a class="page-link" href="?{%  param_replace page=posts.previous_page_number %}">Previous</a>
+          </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+          </li>
+        {% endif %}
+
+        {% if posts.number|add:'-4' > 1 %}
+             <li class="page-item"><a class="page-link" href="?{% param_replace page=posts.number|add:'-5' %}">&hellip;</a></li>
+        {% endif %}
+
+        {% for i in posts.paginator.page_range %}
+            {% if posts.number == i %}
+                <li class="page-item active" aria-current="page">
+              <span class="page-link">
+                {{ i }}
+                <span class="sr-only">(current)</span>
+              </span>
+            </li>
+            {% elif i > posts.number|add:'-3' and i < posts.number|add:'3' %}
+                 <li class="page-item"><a class="page-link" href="?{% param_replace page=i %}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if posts.paginator.num_pages > posts.number|add:'4' %}
+            <li class="page-item"><a class="page-link" href="?{% param_replace page=posts.number|add:'5' %}">&hellip;</a></li>
+        {% endif %}
+
+        {% if posts.has_next %}
+            <li class="page-item">
+            <a class="page-link" href="?{% param_replace page=posts.next_page_number %}">Next</a>
+          </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+          </li>
+        {% endif %}
+         <li class="page-item">
+            <a class="page-link" href="?{% param_replace page=posts.paginator.num_pages %}">Last</a>
+        </li>
+      </ul>
+    </nav>
+    <!--end of Pagination-->
+   {% else %}
+        <p>No posts found.</p>
+    {% endif %}
+ </div>
+{% endblock pageContent %}
